@@ -7,4 +7,6 @@ def fibonacci_series(number):
 	    a,b = b,a+b
 
 fib = fibonacci_series
-print(fib(1000))
+print (fib(1000))
+print (fibonacci_series) 	# Prints the address of the function
+print (fib)			# Prints the address of the function
