@@ -10,7 +10,9 @@ def cheeseshop(kind, *arguments, **keywords):
     print("-" * 40)
     for kw in keywords:
         print(kw, ":", keywords[kw])
-Ham="Hamburger"
-Option="But Sir we have Cheese Burst"
-Rhyme="Hickory Dickory Dock a Mouse went up the clock"
-caller= cheeseshop(Ham,Option,"Would Mahi like a bit of a byte?",Rhyme,Shopkeeper="Jay" , empid="345678", Order ="547")
+
+
+Ham = "Hamburger"
+Option = "But Sir we have Cheese Burst"
+Rhyme = "Hickory Dickory Dock a Mouse went up the clock"
+caller = cheeseshop(Ham, Option, "Would Mahi like a bit of a byte?", Rhyme, Shopkeeper="Jay", empid="345678", Order="547")
