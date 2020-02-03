@@ -69,25 +69,20 @@ print(onsite_month_dict)
 offshore_month = []
 offshore_date = []
 offshore_weekday = []
-
 for i in range(3, 18):
     B_range = 'B' + str(i)
     B_col_range_offshore = Offshore[B_range].value  # Offshore Calendar Sheet is selected
     offshore_year.append(int(B_col_range_offshore.strftime('%Y')))
     offshore_month.append(int(B_col_range_offshore.strftime('%m')))
     offshore_date.append(int(B_col_range_offshore.strftime('%d')))
-
 print(40 * '-')
-
 print("Offshore Holiday Calendar")
 print("Year List:", offshore_year)
 print("Month List:", offshore_month)
 print("Date List:", offshore_date)
-
 for i, j, k in zip(offshore_year, offshore_month, offshore_date):
     w = weekday(year=i, month=j, day=k)
     offshore_weekday.append(w + 1)  # Incremented by 1 so that Sunday is 7 and Monday is 1
-
 print("Offshore Holiday (Mon=1 ... Sun=7):", offshore_weekday) """
 # --------------------This code is calculating the working days in a week for a given month-------------------
 
@@ -153,15 +148,27 @@ print("Calendar_dict:",year_dict)
 # logic to replace sat sunday and holiday from onsitehoiday to zero
 
 
-onsite_holidays = {1: [1], 2: [5, 10, 21]}
+onsite_holidays = {}
+
+for i in onsite_month:
+    onsite_holidays.update({i:[]})
+
+for index in range(0,len(onsite_date)):
+    print( f'mon: ${onsite_month[index]}  date: ${onsite_date[index]}  day: ${onsite_weekday[index]}')
+    if onsite_weekday[index] == 7 or onsite_weekday[index] == 6:
+        continue
+    onsite_holidays[onsite_month[index]].append(onsite_date[index])
+
+print ("onsite",onsite_holidays)
+
 
 for month in onsite_holidays.keys():
     # print(len(list(year_dict[month])))
     for week_index in range(len(year_dict[month])):
         # # make the first element and last element of week as 0 that is sat and sunday to zero
         # 5 and 6 because you have used 0 as monday and 6 as saturay 
-        year_dict[month][week_index][5] = 0     
-        year_dict[month][week_index][6] = 0
+       # year_dict[month][week_index][5] = 0     
+       # year_dict[month][week_index][6] = 0
  
         # below loop replaces holiday with zero
         for holiday_date in onsite_holidays[month]:
@@ -170,7 +177,7 @@ for month in onsite_holidays.keys():
                 year_dict[month][week_index][dayindex] = 0
 
 
-# print(year_dict)
+print(year_dict)
 '''
 final output is like this 
 {1: [[0, 0, 0, 0, 2, 3, 0], [0, 6, 7, 8, 9, 10, 0], [0, 13, 14, 15, 16, 17, 0], [0, 20, 21, 22, 23, 24, 0], [0, 27, 28, 29, 30, 31, 0]], 2: []}
@@ -178,45 +185,41 @@ final output is like this
 
 # # below code is if you need the list of working days
 
-no_working_days_in_year={1:[],2:[]}
+no_working_days_in_year={}
+for key in year_dict.keys():
+    no_working_days_in_year.update({key:[]})
 
 for month_no in no_working_days_in_year.keys():
     for week_index in range(len(year_dict[month_no])):
         # get the count and append
+        year_dict[month_no][week_index][5] = 0     
+        year_dict[month_no][week_index][6] = 0
+        
         working_days = len(year_dict[month_no][week_index]) - year_dict[month_no][week_index].count(0)
         no_working_days_in_year[month_no].append(working_days)
 
-print(no_working_days_in_year) 
+print("no_of_working_days_in_year",no_working_days_in_year) 
 
 
 """
 #----------------------------Onsite Calendar---------------------------
-
 holiday_onsite_months = {}
-
 for i in onsite_month:
     holiday_onsite_months.update({i:[]})
-
 for index in range(0,len(onsite_date)):
     print( f'mon: ${onsite_month[index]}  date: ${onsite_date[index]}  day: ${onsite_weekday[index]}')
     if onsite_weekday[index] == 7 or onsite_weekday[index] == 6:
         continue
     holiday_onsite_months[onsite_month[index]].append(onsite_date[index])
-
 print (holiday_onsite_months)
-
 # --------------------------Offshore Calendar-------------------#
 holiday_offshore_months = {}
-
 for i in offshore_month:
     holiday_offshore_months.update({i:[]})
-
 for index in range(0,len(offshore_date)):
     print( f'mon: ${onsite_month[index]}  date: ${onsite_date[index]}  day: ${onsite_weekday[index]}')
     if offshore_weekday[index] == 7 or offshore_weekday[index] == 6:   # Removing Saturday and Sunday
         continue
     holiday_offshore_months[offshore_month[index]].append(offshore_date[index])
-
 print (holiday_offshore_months)
-
 """
