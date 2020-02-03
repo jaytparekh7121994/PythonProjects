@@ -5,8 +5,10 @@ from calendar import monthcalendar
 from openpyxl import load_workbook
 from openpyxl import Workbook
 
+import os 
+cwd = os.getcwd()
 # ----------------------------Opening the existing Excel Workbook and extracting info about the Worksheets ---------------------
-filename = 'Calendar.xlsx'
+filename = cwd + '/Calendar.xlsx'
 wb1 = load_workbook(filename)
 sheets = wb1.sheetnames
 print(sheets)
@@ -135,40 +137,57 @@ while date <= lastday:
 print(weeklist)
 
 
-month_dict ={}
-ls = []
-for i in month_r:
-    month_dict.update({i:[]})
+year_dict ={}
    
-for index in range(0,len(month_r)):
-    ls = monthcalendar(2020,month_r[index])
-    month_dict[month_r[index]].append(ls)
+for month_no in (month_r):
+    ls = monthcalendar(2020,month_no)
+    year_dict[month_no] = ls 
 
-print("Calendar_dict:",month_dict)
+print("Calendar_dict:",year_dict)
 
-for month in onsite_month_dict.keys():
-    for week_index in range(len(month_dict[month])):
-        month_dict[month][week_index][0]= 0
-        # month_dict[month][week_index][6]= 0
-        for onsite_holiday_date in onsite_month_dict[month]:
-                if( onsite_holiday_date in month_dict[month][week_index]):
-                    day_index = month_dict[month][week_index].index(holiday_date)
-                    month_dict[month][week_index][day_index]=0
-                            
+# all you need to do now is 
+#  get the dictionary of onside holidays using the code of holidays  that we wrote yesterday night in the below varaible
+# onsite_holidays = {1: [1], 2: [5, 10, 21]}
 
 
+# logic to replace sat sunday and holiday from onsitehoiday to zero
 
 
-no_of_working_days_in_year = {}
-for key in month_dict.keys():
-    no_of_working_days_in_year.update({key:[]})
+onsite_holidays = {1: [1], 2: [5, 10, 21]}
 
-for month_no in no_of_working_days_in_year.keys():
-    for week_index in range(len(month_dict[month_no])):
-        working_days = len(month_dict[month_no][week_index]) - month_dict[month_no][week_index].count(0)
-        no_of_working_days_in_year[month_no].append(working_days)
+for month in onsite_holidays.keys():
+    # print(len(list(year_dict[month])))
+    for week_index in range(len(year_dict[month])):
+        # # make the first element and last element of week as 0 that is sat and sunday to zero
+        # 5 and 6 because you have used 0 as monday and 6 as saturay 
+        year_dict[month][week_index][5] = 0     
+        year_dict[month][week_index][6] = 0
+ 
+        # below loop replaces holiday with zero
+        for holiday_date in onsite_holidays[month]:
+            if (holiday_date in year_dict[month][week_index]):
+                dayindex = year_dict[month][week_index].index(holiday_date)
+                year_dict[month][week_index][dayindex] = 0
 
-print(no_of_working_days_in_year)    
+
+# print(year_dict)
+'''
+final output is like this 
+{1: [[0, 0, 0, 0, 2, 3, 0], [0, 6, 7, 8, 9, 10, 0], [0, 13, 14, 15, 16, 17, 0], [0, 20, 21, 22, 23, 24, 0], [0, 27, 28, 29, 30, 31, 0]], 2: []}
+'''
+
+# # below code is if you need the list of working days
+
+no_working_days_in_year={1:[],2:[]}
+
+for month_no in no_working_days_in_year.keys():
+    for week_index in range(len(year_dict[month_no])):
+        # get the count and append
+        working_days = len(year_dict[month_no][week_index]) - year_dict[month_no][week_index].count(0)
+        no_working_days_in_year[month_no].append(working_days)
+
+print(no_working_days_in_year) 
+
 
 """
 #----------------------------Onsite Calendar---------------------------
